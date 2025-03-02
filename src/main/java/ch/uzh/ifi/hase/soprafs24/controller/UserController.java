@@ -77,20 +77,20 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
     }
 
-    @PutMapping(value = "/users/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
-    public void editUser(@RequestBody UserPutDTO editUserPutDTO, @PathVariable("id") Long id) {
-        User editUser = DTOMapper.INSTANCE.convertEditUserPutDTOtoEntity(editUserPutDTO);
-        editUser.setId(id);
-    }
-
     @PutMapping(value = "/logout/{id}")
     @ResponseBody
     public UserGetDTO logoutUser(@PathVariable("id") Long id) {
        User userToLogout = userService.findById(id).get();
         userService.logOut(userToLogout);
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userToLogout);
+    }
+
+    @PutMapping(value = "/users/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void editUser(@RequestBody UserPutDTO editUserPutDTO, @PathVariable("id") Long id) {
+        User editUser = DTOMapper.INSTANCE.convertEditUserPutDTOtoEntity(editUserPutDTO);
+        editUser.setId(id);
     }
 
 }
