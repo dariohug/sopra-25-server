@@ -91,6 +91,8 @@ public class UserController {
     public void editUser(@RequestBody UserPutDTO editUserPutDTO, @PathVariable("id") Long id) {
         User editUser = DTOMapper.INSTANCE.convertEditUserPutDTOtoEntity(editUserPutDTO);
         editUser.setId(id);
+
+        userService.editUserbyUserID(editUser);
     }
 
 }

@@ -88,31 +88,34 @@ public class UserService {
   }
 
   public User editUserbyUserID(User user) {
+
     Long userId = user.getId();
     String username = user.getUsername();
     Date birthday = user.getBirthday();
 
     Optional<User> optionalUser = userRepository.findById(userId);
 
-    if (optionalUser.isEmpty()) {  // <-- Corrected check for empty Optional
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with user id %s not found!", userId));
+    if (optionalUser.isEmpty()) { 
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Invalid id: %s", userId));
     }
 
     User existingUser = optionalUser.get();
 
-    if (existingUser != null && existingUser.getUsername().equals(username)) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+    // check if username is already taken, unless taken by user (him-)herself
+    User userByUsername = userRepository.findByUsername(username);
+    if (userByUsername != null && !userByUsername.getId().equals(userId)) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "Username is already taken!");
     }
-  
+    
+    if (username != null && !username.isBlank()) {  
+      existingUser.setUsername(username);
+    }
 
-    if (username != null) {
-        existingUser.setUsername(username);
-    }
-    if (birthday != null) {
+    if (birthday != null) {  
         existingUser.setBirthday(birthday);
     }
-
-    userRepository.saveAndFlush(existingUser);
+    
+    userRepository.save(existingUser);
     return existingUser;
 }
 
