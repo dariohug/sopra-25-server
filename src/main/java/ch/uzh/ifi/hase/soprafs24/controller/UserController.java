@@ -34,18 +34,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    /*
-    Get all users
-     */
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<UserGetDTO> getAllUsers() {
-        // fetch all users in the internal representation
         List<User> users = userService.getUsers();
         List<UserGetDTO> userGetDTOs = new ArrayList<>();
 
-        // convert each user to the API representation
         for (User user : users) {
             userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
         }
@@ -73,14 +68,14 @@ public class UserController {
     @GetMapping(value = "/users/{id}")
     @ResponseBody
     public UserGetDTO getUserbyUserID(@PathVariable("id") long id) {
-        User user = userService.findById(id).get();
+        User user = userService.findById(id);
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
     }
 
     @PutMapping(value = "/logout/{id}")
     @ResponseBody
     public UserGetDTO logoutUser(@PathVariable("id") Long id) {
-       User userToLogout = userService.findById(id).get();
+       User userToLogout = userService.findById(id);
         userService.logOut(userToLogout);
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userToLogout);
     }

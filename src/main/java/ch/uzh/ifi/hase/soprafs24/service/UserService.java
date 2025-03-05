@@ -43,9 +43,14 @@ public class UserService {
     return this.userRepository.findAll();
   }
 
-  public Optional<User> findById(Long Id) {
-    Optional<User> userById = userRepository.findById(Id);
-    return userById;
+  // public Optional<User> findById(Long Id) {
+  //   Optional<User> userById = userRepository.findById(Id);
+  //   return userById;
+  // }
+
+  public User findById(Long id) {
+    return userRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + id + " was not found"));
   }
 
   public User createUser(User newUser) {
